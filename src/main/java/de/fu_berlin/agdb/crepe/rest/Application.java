@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author Simon Kalt
  */
 @EnableAutoConfiguration
-@ComponentScan(basePackages = {"de.fu_berlin.agdb.crepe.*"})
+@ComponentScan
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class);

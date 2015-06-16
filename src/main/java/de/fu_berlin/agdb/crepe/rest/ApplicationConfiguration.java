@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
@@ -12,6 +13,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  * @author Simon Kalt
  */
 @Configuration
+@ComponentScan(basePackages = {"de.fu_berlin.agdb.crepe.*"})
 public class ApplicationConfiguration {
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
