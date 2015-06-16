@@ -13,7 +13,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  * @author Simon Kalt
  */
 @Configuration
-@ComponentScan(basePackages = {"de.fu_berlin.agdb.crepe.*"})
+@ComponentScan(basePackages = {"de.fu_berlin.agdb.crepe.*", "de.fu_berlin.agdb.crepe.rest.*"})
 public class ApplicationConfiguration {
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
