@@ -15,6 +15,10 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**
+ * Data class for weather station meta data.
+ * @author Simon Kalt
+ */
 @Entity
 @Table(name = "dwd_station_meta_data", schema = "public")
 public class StationMetaData implements Serializable {

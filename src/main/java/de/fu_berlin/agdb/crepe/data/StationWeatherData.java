@@ -8,6 +8,10 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**
+ * Data class for weather data.
+ * @author Simon Kalt
+ */
 @Entity
 @Table(name = "dwd_station_weather_data", schema = "public")
 public class StationWeatherData implements Serializable {
