@@ -88,5 +88,10 @@
             <artifactId>crepe-json</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>de.fu-berlin.agdb</groupId>
+            <artifactId>io-adapters</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
