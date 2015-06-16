@@ -8,13 +8,14 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
-import de.fu_berlin.agdb.crepe.rest.util.SimplePoint;
+import de.fu_berlin.agdb.crepe.json.util.SimplePoint;
 
 import java.io.IOException;
 
 /**
  * Class to deserialize {@link com.vividsolutions.jts.geom.Point} objects from JSON.
  * Adapted from <a href="http://stackoverflow.com/questions/27624940/map-a-postgis-geometry-point-field-with-hibernate-on-spring-boot">Stackoverflow</a>.
+ * @author Simon Kalt
  */
 public class PointDeserializer extends JsonDeserializer<Point> {
 
