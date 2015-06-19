@@ -70,7 +70,10 @@ public class StationMetaDataController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{stationId:[\\d]+}")
     public StationMetaData getStationById(@PathVariable long stationId) {
-        return (StationMetaData) getSession().get(StationMetaData.class, stationId);
+        final Session session = getSession();
+        StationMetaData station = (StationMetaData) session.get(StationMetaData.class, stationId);
+        session.close();
+        return station;
     }
 
     /**
