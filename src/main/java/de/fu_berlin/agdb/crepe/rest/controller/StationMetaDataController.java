@@ -11,8 +11,6 @@ import org.hibernate.service.ServiceRegistry;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -52,11 +50,7 @@ public class StationMetaDataController {
         List<StationMetaData> result;
         final Session session = getSession();
         try {
-            Calendar c = new GregorianCalendar();
-            c.roll(Calendar.YEAR, false);
-            q = session.createQuery("from StationMetaData where untilDate >= :date");
-            q.setCalendarDate("date", c);
-
+            q = session.createQuery("from StationMetaData");
             result = (List<StationMetaData>) q.list();
         } finally {
             session.close();
