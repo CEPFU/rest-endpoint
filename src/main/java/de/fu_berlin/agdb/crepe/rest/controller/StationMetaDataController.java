@@ -11,6 +11,7 @@ import org.hibernate.service.ServiceRegistry;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,13 +46,19 @@ public class StationMetaDataController {
      * /stations returns a list of the metadata of all available stations.
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<StationMetaData> allStations() {
+    public List<StationMetaData> allStations(@RequestParam(required = false) Long stationId) {
         Query q;
         List<StationMetaData> result;
         final Session session = getSession();
         try {
-            q = session.createQuery("from StationMetaData");
-            result = (List<StationMetaData>) q.list();
+            if (stationId != null) {
+                StationMetaData station = (StationMetaData) session.get(StationMetaData.class, stationId);
+                result = station == null ? Collections.emptyList() : Collections.singletonList(station);
+            }
+            else {
+                q = session.createQuery("from StationMetaData");
+                result = (List<StationMetaData>) q.list();
+            }
         } finally {
             session.close();
         }
