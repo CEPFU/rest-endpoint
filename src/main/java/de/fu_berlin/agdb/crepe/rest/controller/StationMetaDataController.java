@@ -49,19 +49,17 @@ public class StationMetaDataController {
     public List<StationMetaData> allStations(@RequestParam(required = false) Long stationId) {
         Query q;
         List<StationMetaData> result;
-        final Session session = getSession();
-        try {
             if (stationId != null) {
-                StationMetaData station = (StationMetaData) session.get(StationMetaData.class, stationId);
+                StationMetaData station = getStationById(stationId);
                 result = station == null ? Collections.emptyList() : Collections.singletonList(station);
             }
             else {
+                final Session session = getSession();
                 q = session.createQuery("from StationMetaData");
                 result = (List<StationMetaData>) q.list();
+                session.close();
             }
-        } finally {
-            session.close();
-        }
+
         return result;
     }
 
@@ -83,14 +81,12 @@ public class StationMetaDataController {
         Query q;
         List<StationMetaData> result;
         final Session session = getSession();
-        try {
-            q = session.createQuery("from StationMetaData where stationName like :stationName");
-            q.setString("stationName", stationName + "%");
 
-            result = (List<StationMetaData>) q.list();
-        } finally {
-            session.close();
-        }
+        q = session.createQuery("from StationMetaData where stationName like :stationName");
+        q.setString("stationName", stationName + "%");
+
+        result = (List<StationMetaData>) q.list();
+        session.close();
 
         return result;
     }
