@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.fu-berlin.agdb</groupId>
-    <artifactId>crepe-rest</artifactId>
+    <artifactId>rest-endpoint</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <parent>
