@@ -5,10 +5,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,6 +24,7 @@ public class ProfileController {
     private Logger logger;
 
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
     public void sendUserProfile(@RequestBody String profile) {
 
         File profilesFolder = new File(configuration.getProfilesFolder());
