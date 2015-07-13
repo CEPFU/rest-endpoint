@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.fu_berlin.agdb.crepe.algebra.Operator;
 import de.fu_berlin.agdb.crepe.algebra.Profile;
 import de.fu_berlin.agdb.crepe.algebra.operators.numeric.Equal;
+import de.fu_berlin.agdb.crepe.core.Configuration;
 import de.fu_berlin.agdb.crepe.data.Attribute;
 import de.fu_berlin.agdb.crepe.data.Event;
 import de.fu_berlin.agdb.crepe.data.IAttribute;
@@ -14,18 +15,38 @@ import de.fu_berlin.agdb.crepe.json.serialize.AttributeDeserializer;
 import de.fu_berlin.agdb.crepe.json.serialize.EqualDeserializer;
 import de.fu_berlin.agdb.crepe.json.serialize.ProfileDeserializer;
 import de.fu_berlin.agdb.crepe.outputadapters.JSONOutputAdapter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
  * Spring configuration for the REST server.
+ *
  * @author Simon Kalt
  */
-@Configuration
+@org.springframework.context.annotation.Configuration
 @ComponentScan(basePackages = {"de.fu_berlin.agdb.crepe.*", "de.fu_berlin.agdb.crepe.rest.*"})
 public class ApplicationConfiguration {
+
+    private static final Configuration configuration = new Configuration();
+    private static final Logger logger = LogManager.getLogger("RestEndpoint");
+
+    static {
+        configuration.loadAndCreate();
+    }
+
+    @Bean
+    public Configuration configuration() {
+        return configuration;
+    }
+
+    @Bean
+    public Logger logger() {
+        return logger;
+    }
+
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
