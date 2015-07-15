@@ -1,18 +1,16 @@
 package de.fu_berlin.agdb.crepe.rest.controller;
 
 import de.fu_berlin.agdb.crepe.data.StationMetaData;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;
 
-import java.util.Collections;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 /**
  * A REST controller to serve metadata of all available weather stations.
@@ -20,47 +18,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/stations")
 public class StationMetaDataController {
-    private static final ServiceRegistry serviceRegistry;
-    private static final SessionFactory sessionFactory;
-
-    static {
-        try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
-
-            serviceRegistry = new StandardServiceRegistryBuilder()
-                    .applySettings(configuration.getProperties())
-                    .build();
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
-
-    private static Session getSession() throws HibernateException {
-        return sessionFactory.openSession();
-    }
-
+    @Autowired
+    private EntityManager entityManager;
 
     /**
      * /stations returns a list of the metadata of all available stations.
      */
     @RequestMapping(method = RequestMethod.GET)
     public List<StationMetaData> allStations(@RequestParam(required = false) Long stationId) {
-        Query q;
-        List<StationMetaData> result;
-            if (stationId != null) {
+        if (stationId != null) {
                 StationMetaData station = getStationById(stationId);
-                result = station == null ? Collections.emptyList() : Collections.singletonList(station);
+                return station == null ? emptyList() : singletonList(station);
             }
             else {
-                final Session session = getSession();
-                q = session.createQuery("from StationMetaData");
-                result = (List<StationMetaData>) q.list();
-                session.close();
+                TypedQuery<StationMetaData> query = entityManager.createQuery("from StationMetaData", StationMetaData.class);
+                return query.getResultList();
             }
-
-        return result;
     }
 
     /**
@@ -70,10 +43,7 @@ public class StationMetaDataController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{stationId:[\\d]+}")
     public StationMetaData getStationById(@PathVariable long stationId) {
-        final Session session = getSession();
-        StationMetaData station = (StationMetaData) session.get(StationMetaData.class, stationId);
-        session.close();
-        return station;
+        return entityManager.find(StationMetaData.class, stationId);
     }
 
     /**
@@ -81,17 +51,14 @@ public class StationMetaDataController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/find/{stationName}")
     public List<StationMetaData> getStationsByName(@PathVariable String stationName) {
-        Query q;
-        List<StationMetaData> result;
-        final Session session = getSession();
+        TypedQuery<StationMetaData> q = entityManager.createQuery(
+                "from StationMetaData where stationName like :stationName",
+                StationMetaData.class
+        );
 
-        q = session.createQuery("from StationMetaData where stationName like :stationName");
-        q.setString("stationName", stationName + "%");
+        q.setParameter("stationName", stationName + "%");
 
-        result = (List<StationMetaData>) q.list();
-        session.close();
-
-        return result;
+        return q.getResultList();
     }
 
     /**

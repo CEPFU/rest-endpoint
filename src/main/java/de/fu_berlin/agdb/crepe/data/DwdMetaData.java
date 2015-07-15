@@ -5,9 +5,8 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "dwd_meta_data", schema = "public", catalog = "ems")
-@IdClass(DwdMetaDataPK.class)
 public class DwdMetaData {
-    private long locationId;
+    //private long locationId;
     private long stationId;
     private Date fromDate;
     private Date untilDate;
@@ -15,15 +14,17 @@ public class DwdMetaData {
     private String federalState;
     private LocationMetaData locationMetaDataByLocationId;
 
-    @Id
-    @Column(name = "location_id")
-    public long getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(long locationId) {
-        this.locationId = locationId;
-    }
+    // Currently, when mapping this column, hibernate throws an error,
+    // because there is a duplicate mapping for the location_id
+//    @Id
+//    @Column(name = "location_id")
+//    public long getLocationId() {
+//        return locationId;
+//    }
+//
+//    public void setLocationId(long locationId) {
+//        this.locationId = locationId;
+//    }
 
     @Id
     @Column(name = "station_id")
@@ -82,7 +83,6 @@ public class DwdMetaData {
 
         DwdMetaData that = (DwdMetaData) o;
 
-        if (locationId != that.locationId) return false;
         if (stationId != that.stationId) return false;
         if (stationHeight != that.stationHeight) return false;
         if (fromDate != null ? !fromDate.equals(that.fromDate) : that.fromDate != null) return false;
@@ -94,8 +94,7 @@ public class DwdMetaData {
 
     @Override
     public int hashCode() {
-        int result = (int) (locationId ^ (locationId >>> 32));
-        result = 31 * result + (int) (stationId ^ (stationId >>> 32));
+        int result = (int) (stationId ^ (stationId >>> 32));
         result = 31 * result + (fromDate != null ? fromDate.hashCode() : 0);
         result = 31 * result + (untilDate != null ? untilDate.hashCode() : 0);
         result = 31 * result + stationHeight;

@@ -17,9 +17,14 @@ import de.fu_berlin.agdb.crepe.json.serialize.ProfileDeserializer;
 import de.fu_berlin.agdb.crepe.outputadapters.JSONOutputAdapter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * Spring configuration for the REST server.
@@ -45,6 +50,16 @@ public class ApplicationConfiguration {
     @Bean
     public Logger logger() {
         return logger;
+    }
+
+    @Bean
+    public EntityManagerFactory entityManagerFactory() {
+        return Persistence.createEntityManagerFactory("de.fu_berlin.agdb.crepe.data");
+    }
+
+    @Bean
+    public EntityManager entityManager() {
+        return entityManagerFactory().createEntityManager();
     }
 
     @Bean
