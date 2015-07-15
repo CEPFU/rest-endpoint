@@ -11,8 +11,27 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
+/**
+ * JPA mapping class for meta data about locations.
+ */
 @Entity
 @Table(name = "location_meta_data", schema = "public", catalog = "ems")
+@NamedQueries(value = {
+        /**
+         * Query to retrieve a list of locations by their description.
+         */
+        @NamedQuery(
+                name = "LocationMetaData.findByDescription",
+                query = "from LocationMetaData where locationDescription like :locationDescription"
+        ),
+        /**
+         * Query to retrieve all available locations.
+         */
+        @NamedQuery(
+                name = "LocationMetaData.findAll",
+                query = "from LocationMetaData"
+        )
+})
 public class LocationMetaData {
     private int locationId;
     private Point locationPosition;

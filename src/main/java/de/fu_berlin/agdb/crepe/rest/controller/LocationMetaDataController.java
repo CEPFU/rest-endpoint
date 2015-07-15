@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A REST controller to serve data about the available locations
- * and allow the user to add new ones.
+ * A REST controller to serve data about the available locations.
+ * Eventually this controller will allow the user to add new locations.
  */
 @RestController
 @RequestMapping("/location")
@@ -37,7 +37,7 @@ public class LocationMetaDataController {
             LocationMetaData location = locationById(locationId);
             return location == null ? Collections.emptyList() : Collections.singletonList(location);
         } else {
-            TypedQuery<LocationMetaData> query = entityManager.createQuery("from LocationMetaData", LocationMetaData.class);
+            TypedQuery<LocationMetaData> query = entityManager.createNamedQuery("LocationMetaData.findAll", LocationMetaData.class);
             return query.getResultList();
         }
     }
@@ -55,12 +55,8 @@ public class LocationMetaDataController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{locationDesc:[^\\d].*}")
     public List<LocationMetaData> locationByDescription(@PathVariable String locationDesc) {
-        TypedQuery<LocationMetaData> query = entityManager.createQuery(
-                "from LocationMetaData where locationDescription like :locationDesc",
-                LocationMetaData.class
-        );
-
-        query.setParameter("locationDesc", locationDesc + "%");
+        TypedQuery<LocationMetaData> query = entityManager.createNamedQuery("LocationMetaData.findByDescription", LocationMetaData.class);
+        query.setParameter("locationDescription", locationDesc + "%");
         return query.getResultList();
     }
 
