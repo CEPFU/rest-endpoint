@@ -19,5 +19,7 @@
 
         <mapping class="de.fu_berlin.agdb.crepe.data.StationMetaData"/>
         <mapping class="de.fu_berlin.agdb.crepe.data.StationWeatherData"/>
+        <mapping class="de.fu_berlin.agdb.crepe.data.DwdMetaData"/>
+        <mapping class="de.fu_berlin.agdb.crepe.data.LocationMetaData"/>
     </session-factory>
 </hibernate-configuration>
