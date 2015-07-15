@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.vividsolutions.jts.geom.Point;
 import de.fu_berlin.agdb.crepe.json.serialize.PointDeserializer;
 import de.fu_berlin.agdb.crepe.json.serialize.PointSerializer;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -17,7 +19,8 @@ public class LocationMetaData {
     private String locationDescription;
 
     @Id
-    @Column(name = "location_id")
+    @Generated(GenerationTime.INSERT)
+    @Column(name = "location_id", columnDefinition = "serial", insertable = false, updatable = false)
     public int getLocationId() {
         return locationId;
     }
