@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fu_berlin.agdb.crepe.core.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -22,20 +21,25 @@ import javax.persistence.Persistence;
 @ComponentScan(basePackages = {"de.fu_berlin.agdb.crepe.*", "de.fu_berlin.agdb.crepe.rest.*"})
 public class ApplicationConfiguration {
 
-    private static final Configuration configuration = new Configuration();
-    private static final Logger logger = LogManager.getLogger("RestEndpoint");
-
-    static {
-        configuration.loadAndCreate();
-    }
+    private Configuration configuration;
+    private Logger logger;
 
     @Bean
     public Configuration configuration() {
+        if (configuration == null) {
+            configuration = new Configuration();
+            configuration.loadAndCreate();
+        }
+
         return configuration;
     }
 
     @Bean
     public Logger logger() {
+        if (logger == null) {
+            logger = LogManager.getLogger("RestEndpoint");
+        }
+
         return logger;
     }
 
