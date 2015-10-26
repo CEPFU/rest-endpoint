@@ -30,6 +30,10 @@ import javax.persistence.*;
         @NamedQuery(
                 name = "LocationMetaData.findAll",
                 query = "from LocationMetaData"
+        ),
+        @NamedQuery(
+                name = "LocationMetaData.nearby",
+                query = "from LocationMetaData order by Distance(locationPosition, :Point)"
         )
 })
 public class LocationMetaData {

@@ -1,6 +1,11 @@
 package de.fu_berlin.agdb.crepe.rest.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 import de.fu_berlin.agdb.crepe.data.LocationMetaData;
+import de.fu_berlin.agdb.crepe.json.util.SimplePoint;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +28,9 @@ public class LocationMetaDataController {
     private EntityManager entityManager;
     @Autowired
     private Logger logger;
+
+    @Autowired
+    private GeometryFactory geometryFactory;
 
     /**
      * Returns a list of the meta data of all available locations,
@@ -57,6 +65,28 @@ public class LocationMetaDataController {
     public List<LocationMetaData> locationByDescription(@PathVariable String locationDesc) {
         TypedQuery<LocationMetaData> query = entityManager.createNamedQuery("LocationMetaData.findByDescription", LocationMetaData.class);
         query.setParameter("locationDescription", locationDesc + "%");
+        return query.getResultList();
+    }
+
+    /**
+     * Returns all known locations, ordered by distance from the supplied position.
+     *
+     * @param userPosition Position of the user.
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/dist")
+    public List<LocationMetaData> locationByDistance(@RequestBody SimplePoint userPosition) {
+        Point point = geometryFactory.createPoint(new Coordinate(userPosition.getLongitude(), userPosition.getLatitude()));
+        return locationByDistance(point);
+    }
+
+    /**
+     * Returns all known locations, ordered by distance from the supplied position.
+     *
+     * @param point Position of the user.
+     */
+    public List<LocationMetaData> locationByDistance(Point point) {
+        TypedQuery<LocationMetaData> query = entityManager.createNamedQuery("LocationMetaData.nearby", LocationMetaData.class);
+        query.setParameter("Point", point);
         return query.getResultList();
     }
 

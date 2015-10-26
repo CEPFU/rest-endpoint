@@ -1,6 +1,7 @@
 package de.fu_berlin.agdb.crepe.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import de.fu_berlin.agdb.crepe.core.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,5 +63,10 @@ public class ApplicationConfiguration {
     @Bean
     public ObjectMapper objectMapper() {
         return jacksonBuilder().build();
+    }
+
+    @Bean
+    public GeometryFactory geometryFactory() {
+        return new GeometryFactory();
     }
 }
