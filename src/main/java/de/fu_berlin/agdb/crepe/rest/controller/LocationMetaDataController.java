@@ -1,7 +1,5 @@
 package de.fu_berlin.agdb.crepe.rest.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import de.fu_berlin.agdb.crepe.data.LocationMetaData;
@@ -75,18 +73,31 @@ public class LocationMetaDataController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/dist")
     public List<LocationMetaData> locationByDistance(@RequestBody SimplePoint userPosition) {
-        Point point = geometryFactory.createPoint(new Coordinate(userPosition.getLongitude(), userPosition.getLatitude()));
-        return locationByDistance(point);
+        return locationByDistance(userPosition.asGeometryPoint(geometryFactory), -1);
     }
 
     /**
      * Returns all known locations, ordered by distance from the supplied position.
      *
-     * @param point Position of the user.
+     * @param userPosition Position of the user.
+     * @param count        Maximum number of results to return, -1 means unlimited.
      */
-    public List<LocationMetaData> locationByDistance(Point point) {
+    @RequestMapping(method = RequestMethod.POST, value = "/dist/{count:[\\d]*}")
+    public List<LocationMetaData> locationByDistance(@RequestBody SimplePoint userPosition, @PathVariable int count) {
+        return locationByDistance(userPosition.asGeometryPoint(), count);
+    }
+
+    /**
+     * Returns known locations, ordered by distance from the supplied position.
+     *
+     * @param point Position of the user.
+     * @param count Maximum number of results to return, -1 means unlimited.
+     */
+    public List<LocationMetaData> locationByDistance(Point point, int count) {
         TypedQuery<LocationMetaData> query = entityManager.createNamedQuery("LocationMetaData.nearby", LocationMetaData.class);
         query.setParameter("Point", point);
+        if (count >= 0)
+            query.setMaxResults(count);
         return query.getResultList();
     }
 
