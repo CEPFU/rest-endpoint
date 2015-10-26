@@ -2,7 +2,6 @@ package de.fu_berlin.agdb.crepe.rest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fu_berlin.agdb.crepe.core.Configuration;
-import de.fu_berlin.agdb.crepe.json.algebra.JSONProfile;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
@@ -82,7 +81,7 @@ public class ProfileController {
      */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void sendUserProfile(@RequestBody JSONProfile profile) {
+    public void sendUserProfile(@RequestBody ProfileRequest profile) {
         File profilesFolder = getProfilesFolder("json");
 
         try {
@@ -90,10 +89,11 @@ public class ProfileController {
             profileFile = File.createTempFile("user_", ".json", profilesFolder);
             logger.info(MARKER, "Writing received user profile to file {}.", profileFile);
 
-            objectMapper.writeValue(profileFile, profile);
+            objectMapper.writeValue(profileFile, profile.getProfile());
         } catch (IOException ex) {
             logger.error(MARKER, "Error while writing profile to file.", ex);
         }
 
     }
+
 }
