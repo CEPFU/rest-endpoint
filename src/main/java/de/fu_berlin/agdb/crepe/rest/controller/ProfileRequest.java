@@ -12,6 +12,7 @@ public class ProfileRequest {
     private SimpleLocation location;
     private int id;
     private JSONProfile profile;
+    private String appId;
 
     public String getUserId() {
         return userId;
@@ -51,5 +52,13 @@ public class ProfileRequest {
 
     public void setProfile(JSONProfile profile) {
         this.profile = profile;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 }

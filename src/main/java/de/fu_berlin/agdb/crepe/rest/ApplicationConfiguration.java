@@ -69,4 +69,9 @@ public class ApplicationConfiguration {
     public GeometryFactory geometryFactory() {
         return new GeometryFactory();
     }
+
+    @Bean
+    public String ionicPushPrivateApiKey() {
+        return "<insert your ionic.io private API key here!>";
+    }
 }

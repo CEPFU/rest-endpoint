@@ -2,6 +2,9 @@ package de.fu_berlin.agdb.crepe.rest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fu_berlin.agdb.crepe.core.Configuration;
+import de.fu_berlin.agdb.crepe.json.algebra.JSONProfile;
+import de.fu_berlin.agdb.crepe.json.algebra.notifications.JSONIonicPushNotification;
+import de.fu_berlin.agdb.crepe.json.algebra.notifications.JSONNotification;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
@@ -14,6 +17,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/profile")
@@ -26,6 +31,8 @@ public class ProfileController {
     private Logger logger;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private String ionicPushPrivateApiKey;
 
     private File profilesFolder;
 
@@ -81,15 +88,37 @@ public class ProfileController {
      */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void sendUserProfile(@RequestBody ProfileRequest profile) {
+    public void sendUserProfile(@RequestBody ProfileRequest request) {
+        JSONProfile profile = request.getProfile();
+        List<JSONNotification<?>> notifications = profile.getNotifications();
+
+        if (notifications == null) {
+            notifications = new ArrayList<>();
+            profile.setNotifications(notifications);
+        } else {
+            for (JSONNotification<?> notif : notifications) {
+                if (notif instanceof JSONIonicPushNotification) {
+                    ((JSONIonicPushNotification) notif).setPrivateApiKey(ionicPushPrivateApiKey);
+                }
+            }
+        }
+
+        notifications.add(new JSONIonicPushNotification(
+                request.getUserId(),
+                String.format("Profile %s activated!", request.getName()),
+                request.getAppId(),
+                ionicPushPrivateApiKey
+        ));
+
         File profilesFolder = getProfilesFolder();
 
         try {
+            // TODO: Check for other profiles with the same userId and id and replace!
             File profileFile;
             profileFile = File.createTempFile("user_", ".json", profilesFolder);
             logger.info(MARKER, "Writing received user profile to file {}.", profileFile);
 
-            objectMapper.writeValue(profileFile, profile.getProfile());
+            objectMapper.writeValue(profileFile, profile);
         } catch (IOException ex) {
             logger.error(MARKER, "Error while writing profile to file.", ex);
         }
