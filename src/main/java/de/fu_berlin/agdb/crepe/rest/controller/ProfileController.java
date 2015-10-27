@@ -82,7 +82,7 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void sendUserProfile(@RequestBody ProfileRequest profile) {
-        File profilesFolder = getProfilesFolder("json");
+        File profilesFolder = getProfilesFolder();
 
         try {
             File profileFile;
