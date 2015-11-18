@@ -109,12 +109,7 @@
     <dependency>
       <groupId>de.fu-berlin.agdb</groupId>
       <artifactId>crepe</artifactId>
-      <version>0.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>de.fu-berlin.agdb</groupId>
-      <artifactId>json</artifactId>
-      <version>0.1.3</version>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>de.fu-berlin.agdb</groupId>
