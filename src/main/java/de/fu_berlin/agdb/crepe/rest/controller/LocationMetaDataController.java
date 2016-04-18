@@ -24,8 +24,6 @@ public class LocationMetaDataController {
 
     @Autowired
     private EntityManager entityManager;
-    @Autowired
-    private Logger logger;
 
     @Autowired
     private GeometryFactory geometryFactory;
