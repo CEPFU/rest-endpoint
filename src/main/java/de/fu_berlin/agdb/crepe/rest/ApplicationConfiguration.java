@@ -72,6 +72,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public String ionicPushPrivateApiKey() {
+        // FIXME: insert ionic.io private API key here
         return "<insert your ionic.io private API key here!>";
     }
 }
