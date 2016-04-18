@@ -84,7 +84,7 @@ public class ProfileController {
 
     /**
      * Receives a JSON encoded profile, checks its integrity (by deserializing it)
-     * and writes it into the <em>json</em> subfolder of the profile directory.
+     * and writes it into the profile directory.
      */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
