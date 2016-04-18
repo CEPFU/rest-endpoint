@@ -113,9 +113,8 @@ public class ProfileController {
         File profilesFolder = getProfilesFolder();
 
         try {
-            // TODO: Check for other profiles with the same userId and id and replace!
             File profileFile;
-            profileFile = File.createTempFile("user_", ".json", profilesFolder);
+            profileFile = new File(profilesFolder, "user_" + request.getUserId() + "_" + request.getId() + ".json");
             logger.info(MARKER, "Writing received user profile to file {}.", profileFile);
 
             objectMapper.writeValue(profileFile, profile);
