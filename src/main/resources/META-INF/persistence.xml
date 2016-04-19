@@ -6,7 +6,6 @@
 
         <class>de.fu_berlin.agdb.crepe.data.LocationMetaData</class>
         <class>de.fu_berlin.agdb.crepe.data.DwdMetaData</class>
-        <class>de.fu_berlin.agdb.crepe.data.StationMetaData</class>
 
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ems"/>
