@@ -17,14 +17,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "location_meta_data", schema = "public", catalog = "ems")
 @NamedQueries(value = {
-        /**
+        /*
          * Query to retrieve a list of locations by their description.
          */
         @NamedQuery(
                 name = "LocationMetaData.findByDescription",
                 query = "from LocationMetaData where locationDescription like :locationDescription"
         ),
-        /**
+        /*
          * Query to retrieve all available locations.
          */
         @NamedQuery(
@@ -32,6 +32,9 @@ import javax.persistence.*;
                 query = "from LocationMetaData"
         ),
         // FIXME: transform points to same spatial reference?!
+        /*
+         * Query to retrieve locations ordered by distance from a given point.
+         */
         @NamedQuery(
                 name = "LocationMetaData.nearby",
                 query = "from LocationMetaData order by Distance(locationPosition, :Point)"
