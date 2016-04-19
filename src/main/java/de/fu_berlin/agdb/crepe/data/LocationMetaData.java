@@ -43,6 +43,7 @@ public class LocationMetaData {
 
     @Id
     @Generated(GenerationTime.INSERT)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_id", columnDefinition = "serial", insertable = false, updatable = false)
     public int getLocationId() {
         return locationId;

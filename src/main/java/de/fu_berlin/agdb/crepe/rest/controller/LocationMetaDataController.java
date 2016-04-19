@@ -4,7 +4,6 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import de.fu_berlin.agdb.crepe.data.LocationMetaData;
 import de.fu_berlin.agdb.crepe.json.util.SimplePoint;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;
@@ -97,6 +96,13 @@ public class LocationMetaDataController {
         if (count >= 0)
             query.setMaxResults(count);
         return query.getResultList();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/new")
+    public void newLocation(@RequestBody LocationMetaData location) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(location);
+        entityManager.getTransaction().commit();
     }
 
     /**
