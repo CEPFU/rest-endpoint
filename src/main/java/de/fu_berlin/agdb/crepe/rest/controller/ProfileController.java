@@ -11,8 +11,10 @@ import org.apache.logging.log4j.MarkerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -88,7 +90,7 @@ public class ProfileController {
      */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void sendUserProfile(@RequestBody ProfileRequest request) {
+    public ResponseEntity<?> sendUserProfile(@RequestBody ProfileRequest request) {
         JSONProfile profile = request.getProfile();
         List<JSONNotification<?>> notifications = profile.getNotifications();
 
@@ -114,14 +116,33 @@ public class ProfileController {
 
         try {
             File profileFile;
-            profileFile = new File(profilesFolder, "user_" + request.getUserId() + "_" + request.getId() + ".json");
+            profileFile = new File(profilesFolder, getProfileFilename(request));
             logger.info(MARKER, "Writing received user profile to file {}.", profileFile);
 
             objectMapper.writeValue(profileFile, profile);
         } catch (IOException ex) {
             logger.error(MARKER, "Error while writing profile to file.", ex);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
+    @Nonnull
+    private String getProfileFilename(@RequestBody ProfileRequest request) {
+        return "user_" + request.getUserId() + "_" + request.getId() + ".json";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/delete")
+    public ResponseEntity<?> deleteUserProfile(@RequestBody ProfileRequest request) {
+            File profileFile = new File(profilesFolder, getProfileFilename(request));
+            logger.info(MARKER, "Deleting user profile {}", profileFile);
+            boolean success = profileFile.delete();
+        if (success) {
+            logger.info("Successfully deleted user profile.");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }
