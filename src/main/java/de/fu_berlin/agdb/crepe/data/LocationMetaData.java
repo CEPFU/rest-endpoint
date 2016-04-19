@@ -31,6 +31,7 @@ import javax.persistence.*;
                 name = "LocationMetaData.findAll",
                 query = "from LocationMetaData"
         ),
+        // FIXME: transform points to same spatial reference?!
         @NamedQuery(
                 name = "LocationMetaData.nearby",
                 query = "from LocationMetaData order by Distance(locationPosition, :Point)"
