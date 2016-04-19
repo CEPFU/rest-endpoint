@@ -8,9 +8,10 @@ import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Main entry point for the REST server.
+ *
  * @author Simon Kalt
  */
-@EnableAutoConfiguration(exclude = { JpaBaseConfiguration.class, HibernateJpaAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = {JpaBaseConfiguration.class, HibernateJpaAutoConfiguration.class})
 @ComponentScan
 public class Application {
     public static void main(String[] args) {

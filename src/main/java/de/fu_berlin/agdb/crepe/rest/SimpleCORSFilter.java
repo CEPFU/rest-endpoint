@@ -6,6 +6,9 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Filter to allow cross-origin resource sharing.
+ */
 @Component
 public class SimpleCORSFilter implements Filter {
 

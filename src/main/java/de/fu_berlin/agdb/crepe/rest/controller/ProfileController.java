@@ -66,6 +66,11 @@ public class ProfileController {
         }
     }
 
+    /**
+     * Receives a plain text profile written in the CREPE DSL.
+     *
+     * @param profile The profile, written in the CREPE DSL.
+     */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE)
     public void sendUserProfile(@RequestBody String profile) {
@@ -84,9 +89,14 @@ public class ProfileController {
         }
     }
 
+    // TODO: Rename to receiveUserProfile or similar?
+
     /**
      * Receives a JSON encoded profile, checks its integrity (by deserializing it)
      * and writes it into the profile directory.
+     *
+     * @param request The profile to save
+     * @return HTTP 204 No Content if successful, 500 Internal Server error if not
      */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -124,7 +134,7 @@ public class ProfileController {
             logger.error(MARKER, "Error while writing profile to file.", ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Nonnull
@@ -132,14 +142,20 @@ public class ProfileController {
         return "user_" + request.getUserId() + "_" + request.getId() + ".json";
     }
 
+    /**
+     * Deletes a profile.
+     *
+     * @param request The profile to delete, must contain userId and id.
+     * @return HTTP 204 No Content if successful, 404 Not Found if the profile could not be deleted.
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/delete")
     public ResponseEntity<?> deleteUserProfile(@RequestBody ProfileRequest request) {
-            File profileFile = new File(profilesFolder, getProfileFilename(request));
-            logger.info(MARKER, "Deleting user profile {}", profileFile);
-            boolean success = profileFile.delete();
+        File profileFile = new File(profilesFolder, getProfileFilename(request));
+        logger.info(MARKER, "Deleting user profile {}", profileFile);
+        boolean success = profileFile.delete();
         if (success) {
             logger.info("Successfully deleted user profile.");
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

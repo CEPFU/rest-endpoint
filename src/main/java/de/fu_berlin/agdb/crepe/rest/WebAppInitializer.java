@@ -10,6 +10,10 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import java.util.EnumSet;
 
+/**
+ * Configuration of the servlet context.
+ * Currently used to allow cross-origin resource sharing.
+ */
 @Component
 public class WebAppInitializer implements WebApplicationInitializer {
     @Override

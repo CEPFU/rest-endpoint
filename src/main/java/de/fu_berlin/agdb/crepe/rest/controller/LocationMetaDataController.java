@@ -56,6 +56,12 @@ public class LocationMetaDataController {
         return entityManager.find(LocationMetaData.class, locationId);
     }
 
+    /**
+     * Returns a list of locations where the descriptions start with the given string.
+     *
+     * @param locationDesc string to search for
+     * @return A list of locations matching the description
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/{locationDesc:[^\\d].*}")
     public List<LocationMetaData> locationByDescription(@PathVariable String locationDesc) {
         TypedQuery<LocationMetaData> query = entityManager.createNamedQuery("LocationMetaData.findByDescription", LocationMetaData.class);
@@ -98,6 +104,11 @@ public class LocationMetaDataController {
         return query.getResultList();
     }
 
+    /**
+     * Adds a new location to the database.
+     *
+     * @param location The location to add.
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/new")
     public void newLocation(@RequestBody LocationMetaData location) {
         entityManager.getTransaction().begin();
